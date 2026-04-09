@@ -6,7 +6,7 @@
     <div>
         <h1>{{ t('page.home.title') }}</h1>
         <p>{{ t('page.home.description') }}</p>
-        <p>{{ t('form.placeholder.name', { name: 'Ada' }) }}</p>
+        <p>{{ t('form.placeholder.name', { name: 'Diego' }) }}</p>
         <p>Fallback: {{ t('page.home.onlySpanish') }}</p>
         <p>Locale actual: {{ locale }}</p>
 
