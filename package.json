@@ -45,7 +45,7 @@
         "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxt prepare playground",
         "lint": "eslint . && prettier . --check",
         "lint:fix": "eslint . --fix && prettier . --write",
-        "prepack": "nuxt-module-build build",
+        "prepack": "tsc -p tsconfig.build.json --noEmit && nuxt-module-build build",
         "release": "npm run lint:fix && npm run prepack && changelogen --release && npm publish && git push --follow-tags"
     },
     "resolutions": {
