@@ -1,4 +1,6 @@
-export default {
+import { defineI18nLocale } from '@groupteknology/nuxt-i18n'
+
+export default defineI18nLocale({
     form: {
         label: {
             email: 'Correo electrónico',
@@ -20,4 +22,4 @@ export default {
             title: 'Página de inicio',
         },
     },
-}
+})

@@ -10,6 +10,7 @@ export default defineNuxtConfig({
             name: 'playground-locale',
         },
         defaultLocale: 'es',
+        detectLocale: true,
         dir: 'i18n',
         fallbackLocale: 'es',
         locales: [
@@ -24,6 +25,7 @@ export default defineNuxtConfig({
                 name: 'English',
             },
         ],
+        onMissing: (path, locale) => `[missing:${locale}] ${path}`,
         warnOnMissing: true,
     },
 

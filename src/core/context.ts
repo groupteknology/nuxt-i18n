@@ -12,14 +12,14 @@ export function createContext(options: NuxtI18nOptions, nuxt: Nuxt) {
     const resolvedOptions = resolveOptions(options)
     const buildDir = nuxt.options.buildDir
     const rootDir = project.config.rootDir
+    const sourceOptions = ((project.config as { i18n?: NuxtI18nOptions }).i18n ?? options) as NuxtI18nOptions
 
     validateOptions(resolvedOptions, rootDir)
-
-    nuxt.options.runtimeConfig.public.i18n = resolvedOptions
 
     return {
         buildDir,
         options: resolvedOptions,
         rootDir,
+        sourceOptions,
     }
 }

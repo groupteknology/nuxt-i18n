@@ -14,11 +14,12 @@ Lightweight i18n module for Nuxt with:
 ## Features
 
 - nested messages from local `.ts` files
-- `$t(path, params?)` interpolation with `{name}` and `{{name}}`
+- `$t(path, params?)` interpolation with typed params from `{name}` and `{{name}}`
 - `$locale`, `$locales` and `$setLocale(code)`
+- optional initial locale detection from `Accept-Language` / `navigator.language`
 - fallback to `fallbackLocale` when a key is missing in the active locale
-- configurable locale cookie and optional missing-key warnings
-- generated types for locale codes and translation paths
+- configurable locale cookie, `onMissing()` and optional missing-key warnings
+- generated types for locale codes, translation paths and interpolation params
 
 ## Quick Setup
 
@@ -38,6 +39,7 @@ export default defineNuxtConfig({
             name: 'locale',
             sameSite: 'lax',
         },
+        detectLocale: true,
         defaultLocale: 'es',
         dir: 'i18n',
         fallbackLocale: 'es',
@@ -45,6 +47,7 @@ export default defineNuxtConfig({
             { code: 'es', file: 'es.ts', name: 'Espanol' },
             { code: 'en', file: 'en.ts', name: 'English' },
         ],
+        onMissing: (path, locale) => `[missing:${locale}] ${path}`,
         warnOnMissing: true,
     },
 })
@@ -54,29 +57,36 @@ Create locale files in `i18n/locales`:
 
 ```ts
 // i18n/locales/es.ts
-export default {
+import { defineI18nLocale } from '@groupteknology/nuxt-i18n'
+
+export default defineI18nLocale({
     page: {
         home: {
             title: 'Inicio',
             welcome: 'Hola {{name}}',
         },
     },
-}
+})
 ```
 
 ```ts
 // i18n/locales/en.ts
+import { defineI18nLocale } from '@groupteknology/nuxt-i18n'
 import type { LocaleInput } from '@groupteknology/nuxt-i18n'
 
-export default {
+export default defineI18nLocale({
     page: {
         home: {
             title: 'Home',
             welcome: 'Hello {{name}}',
         },
     },
-} satisfies LocaleInput
+} satisfies LocaleInput)
 ```
+
+`defineI18nLocale()` preserves literal message strings, so the generated types can infer interpolation params from your default locale. For example, `t('page.home.welcome', { name: 'Ada' })` is accepted, while missing or misspelled params are caught by TypeScript.
+
+If you enable `detectLocale: true`, the module will try to match the first request language against your configured locales on SSR and `navigator.language` on the client. When a translation is missing in every locale, `onMissing(path, locale, fallbackLocale)` lets you return a custom fallback string before `warnOnMissing` logs anything.
 
 Use it in components:
 
@@ -105,8 +115,9 @@ This module is intentionally small. It does include:
 
 - messages loaded from local TypeScript files
 - cookie-based locale persistence
+- optional initial locale detection
 - typed keys based on the default locale
-- configurable fallback locale and missing-key warnings
+- configurable fallback locale, `onMissing()` and missing-key warnings
 
 It does not include:
 

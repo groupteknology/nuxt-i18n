@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.0.3
+
+### Features
+
+- typed interpolation params inferred from the default locale message strings via `defineI18nLocale()`
+- optional initial locale detection from request/browser language
+- `onMissing(path, locale, fallbackLocale)` for custom missing-translation fallbacks
+
 ## v0.0.2
 
 ### Features

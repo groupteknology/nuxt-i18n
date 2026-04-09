@@ -11,6 +11,7 @@ describe('translate', () => {
             secure: false,
         },
         defaultLocale: 'es',
+        detectLocale: false,
         dir: 'i18n',
         fallbackLocale: 'es',
         locales: [

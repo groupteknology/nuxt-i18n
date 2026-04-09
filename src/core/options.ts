@@ -1,13 +1,15 @@
-import type { NuxtI18nCookieOptions, NuxtI18nLocale, NuxtI18nOptions } from '../types'
+import type { NuxtI18nCookieOptions, NuxtI18nLocale, NuxtI18nOnMissing, NuxtI18nOptions } from '../types'
 
 export type ResolvedNuxtI18nCookieOptions = Required<NuxtI18nCookieOptions>
 
 export type ResolvedNuxtI18nOptions = {
     cookie: ResolvedNuxtI18nCookieOptions
     defaultLocale: string
+    detectLocale: boolean
     dir: string
     fallbackLocale: string
     locales: NuxtI18nLocale[]
+    onMissing?: NuxtI18nOnMissing
     warnOnMissing: boolean
 }
 
@@ -20,9 +22,11 @@ export function resolveOptions(options: NuxtI18nOptions): ResolvedNuxtI18nOption
             secure: options.cookie?.secure ?? false,
         },
         defaultLocale: options.defaultLocale || 'es',
+        detectLocale: options.detectLocale ?? false,
         dir: options.dir || 'i18n',
         fallbackLocale: options.fallbackLocale || options.defaultLocale || 'es',
         locales: (options.locales || []) as NuxtI18nLocale[],
+        onMissing: options.onMissing,
         warnOnMissing: options.warnOnMissing ?? false,
     }
 }
