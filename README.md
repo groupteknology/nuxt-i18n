@@ -5,65 +5,75 @@
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
-Lightweight i18n module for Nuxt with:
+A small Nuxt i18n module focused on typed translations, simple setup, and SSR-safe locale persistence.
+
+It is a good fit when you want:
 
 - typed translation keys from your default locale
-- SSR-safe locale resolution with cookie persistence
-- simple `useI18n()` API without route strategies or SEO overhead
+- typed interpolation params from message placeholders
+- cookie-based locale persistence that works on SSR and client
+- a minimal `useI18n()` API without routing, SEO, or domain strategies
 
 ## Features
 
-- nested messages from local `.ts` files
-- `$t(path, params?)` interpolation with typed params from `{name}` and `{{name}}`
-- `$locale`, `$locales` and `$setLocale(code)`
-- optional initial locale detection from `Accept-Language` / `navigator.language`
-- fallback to `fallbackLocale` when a key is missing in the active locale
-- configurable locale cookie, `onMissing()` and optional missing-key warnings
-- generated types for locale codes, translation paths and interpolation params
+- messages from local TypeScript files
+- nested key lookup like `page.home.title`
+- `t(path, params?)` with inferred params from `{name}` and `{{name}}`
+- `locale`, `locales`, and `setLocale(code)` from `useI18n()`
+- fallback to `fallbackLocale` when a key is missing
+- optional locale detection from `Accept-Language` and `navigator.language`
+- configurable cookie options
+- `onMissing(path, locale, fallbackLocale)` for custom fallback text
+- generated types for locale codes, translation paths, and params
 
-## Quick Setup
-
-Install the module:
+## Install
 
 ```bash
 pnpm add @groupteknology/nuxt-i18n
 ```
 
-Register it in `nuxt.config.ts`:
+## Quick Setup
+
+Register the module in `nuxt.config.ts`:
 
 ```ts
 export default defineNuxtConfig({
     modules: ['@groupteknology/nuxt-i18n'],
     i18n: {
+        defaultLocale: 'es',
+        fallbackLocale: 'es',
+        dir: 'i18n',
+        detectLocale: true,
+        warnOnMissing: true,
         cookie: {
             name: 'locale',
             sameSite: 'lax',
         },
-        detectLocale: true,
-        defaultLocale: 'es',
-        dir: 'i18n',
-        fallbackLocale: 'es',
         locales: [
-            { code: 'es', file: 'es.ts', name: 'Espanol' },
+            { code: 'es', file: 'es.ts', name: 'Español' },
             { code: 'en', file: 'en.ts', name: 'English' },
         ],
         onMissing: (path, locale) => `[missing:${locale}] ${path}`,
-        warnOnMissing: true,
     },
 })
 ```
 
-Create locale files in `i18n/locales`:
+Create your locale files in `i18n/locales`:
 
 ```ts
 // i18n/locales/es.ts
 import { defineI18nLocale } from '@groupteknology/nuxt-i18n'
 
 export default defineI18nLocale({
+    form: {
+        placeholder: {
+            name: 'Tu nombre es {{name}}',
+        },
+    },
     page: {
         home: {
-            title: 'Inicio',
-            welcome: 'Hola {{name}}',
+            description: 'Esta es la página de inicio',
+            title: 'Página de inicio',
         },
     },
 })
@@ -71,22 +81,22 @@ export default defineI18nLocale({
 
 ```ts
 // i18n/locales/en.ts
-import { defineI18nLocale } from '@groupteknology/nuxt-i18n'
 import type { LocaleInput } from '@groupteknology/nuxt-i18n'
 
-export default defineI18nLocale({
-    page: {
-        home: {
-            title: 'Home',
-            welcome: 'Hello {{name}}',
+export default {
+    form: {
+        placeholder: {
+            name: 'Your name is {{name}}',
         },
     },
-} satisfies LocaleInput)
+    page: {
+        home: {
+            description: 'This is the home page',
+            title: 'Home page',
+        },
+    },
+} satisfies LocaleInput
 ```
-
-`defineI18nLocale()` preserves literal message strings, so the generated types can infer interpolation params from your default locale. For example, `t('page.home.welcome', { name: 'Ada' })` is accepted, while missing or misspelled params are caught by TypeScript.
-
-If you enable `detectLocale: true`, the module will try to match the first request language against your configured locales on SSR and `navigator.language` on the client. When a translation is missing in every locale, `onMissing(path, locale, fallbackLocale)` lets you return a custom fallback string before `warnOnMissing` logs anything.
 
 Use it in components:
 
@@ -98,7 +108,8 @@ Use it in components:
 <template>
     <div>
         <h1>{{ t('page.home.title') }}</h1>
-        <p>{{ t('page.home.welcome', { name: 'Ada' }) }}</p>
+        <p>{{ t('page.home.description') }}</p>
+        <p>{{ t('form.placeholder.name', { name: 'Diego' }) }}</p>
 
         <button v-for="item in locales" :key="item.code" @click="setLocale(item.code)">
             {{ item.name }}
@@ -109,49 +120,117 @@ Use it in components:
 </template>
 ```
 
+## Typed Messages
+
+The default locale is the source of truth for generated translation types.
+
+- translation paths are inferred from the default locale object
+- interpolation params are inferred from placeholders like `{{name}}`
+- secondary locales can be partial by using `satisfies LocaleInput`
+
+`defineI18nLocale()` helps preserve literal strings so TypeScript can infer params correctly. For example:
+
+```ts
+t('form.placeholder.name', { name: 'Ada' })
+```
+
+This is valid, while missing or misspelled params are caught by TypeScript.
+
+## Locale Resolution
+
+The active locale is resolved in this order:
+
+1. cookie value
+2. detected locale, if `detectLocale: true`
+3. `defaultLocale`
+
+When detection is enabled, the module checks:
+
+- `Accept-Language` during SSR
+- `navigator.languages` and `navigator.language` on the client
+
+If a translation is missing in the active locale, the module tries `fallbackLocale`. If the key is still missing, `onMissing()` can return a custom string before `warnOnMissing` logs a warning.
+
+## API
+
+`useI18n()` returns:
+
+- `locale`: current locale ref
+- `locales`: configured locale list
+- `setLocale(code)`: change the active locale
+- `t(path, params?)`: translate a message
+
+The plugin also injects:
+
+- `$locale`
+- `$locales`
+- `$setLocale`
+- `$t`
+
+## Options
+
+```ts
+type NuxtI18nOptions = {
+    cookie?: {
+        maxAge?: number
+        name?: string
+        sameSite?: 'lax' | 'none' | 'strict'
+        secure?: boolean
+    }
+    defaultLocale?: string
+    detectLocale?: boolean
+    dir?: string
+    fallbackLocale?: string
+    locales?: Array<{
+        code: string
+        file: `${string}.ts`
+        name: string
+    }>
+    onMissing?: (path: string, locale: string, fallbackLocale: string) => string | undefined
+    warnOnMissing?: boolean
+}
+```
+
 ## Scope
 
-This module is intentionally small. It does include:
+This module intentionally stays small.
 
-- messages loaded from local TypeScript files
-- cookie-based locale persistence
-- optional initial locale detection
-- typed keys based on the default locale
-- configurable fallback locale, `onMissing()` and missing-key warnings
+Included:
 
-It does not include:
+- typed local messages
+- cookie persistence
+- SSR/client locale detection
+- fallback locale support
+- missing-key customization
+
+Not included:
 
 - localized routing
-- browser language detection
 - SEO tags or `hreflang`
 - domain-based locale strategies
+- advanced message formatting or ICU syntax
 
-## Contribution
+## Local Development
 
-<details>
-  <summary>Local development</summary>
-  
-  ```bash
-  # Install dependencies
-  npm install
-  
-  # Generate type stubs
-  npm run dev:prepare
-  
-  # Develop with the playground
-  npm run dev
-  
-  # Build the playground
-  npm run dev:build
-  
-  # Run ESLint
-  npm run lint
-  
-  # Release new version
-  npm run release
-  ```
+```bash
+npm install
+npm run dev:prepare
+npm run dev
+```
 
-</details>
+Useful commands:
+
+- `npm run dev:build`
+- `npm run lint`
+- `npm run prepack`
+- `npm run release`
+
+## Maintainer Docs
+
+For internal project context:
+
+- [docs/ARCHITECTURE.md](/Users/xpedition/Desktop/Projects/groupteknology/nuxt-i18n/docs/ARCHITECTURE.md)
+- [docs/DEVELOPMENT.md](/Users/xpedition/Desktop/Projects/groupteknology/nuxt-i18n/docs/DEVELOPMENT.md)
 
 <!-- Badges -->
 
