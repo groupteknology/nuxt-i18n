@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.0.4
+
+### Features
+
+- dedicated `tsconfig.build.json` for package checks during `prepack`
+
+### Chore
+
+- removed test scripts, dependencies, fixtures and CI test job
+- removed `src/runtime/server/tsconfig.json` to avoid interfering with local development
+
 ## v0.0.3
 
 ### Features
