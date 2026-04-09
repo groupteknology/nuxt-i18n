@@ -1,14 +1,19 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+    const { locale, locales, setLocale, t } = useI18n()
+</script>
 
 <template>
     <div>
-        <p>Test: {{ $t('form.label.surname') }}</p>
-        <p>Test: {{ $t('form.label.message') }}</p>
-        <p>Test: {{ $t('form.placeholder.name') }}</p>
-        <p>Test: {{ $t('form.label.surname') }}</p>
+        <h1>{{ t('page.home.title') }}</h1>
+        <p>{{ t('page.home.description') }}</p>
+        <p>{{ t('form.placeholder.name', { name: 'Ada' }) }}</p>
+        <p>Fallback: {{ t('page.home.onlySpanish') }}</p>
+        <p>Locale actual: {{ locale }}</p>
 
-        <button @click="$setLocale('en')">English</button>
-        <button @click="$setLocale('es')">Spanish</button>
-        <pre>{{ $locales }}</pre>
+        <button v-for="item in locales" :key="item.code" @click="setLocale(item.code)">
+            {{ item.name }}
+        </button>
+
+        <pre>{{ locales }}</pre>
     </div>
 </template>

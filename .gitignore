@@ -16,6 +16,8 @@ node_modules
 # Generated dirs
 dist
 *.tgz
+src/runtime/**/*.d.ts
+src/runtime/**/*.js
 
 # Nuxt
 .nuxt

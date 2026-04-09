@@ -39,4 +39,8 @@ export function validateOptions(options: ResolvedNuxtI18nOptions, rootDir: strin
     if (!localeCodes.has(options.defaultLocale)) {
         throw new Error(`[nuxt-i18n] \`defaultLocale\` must match one of the configured locales. Received \`${options.defaultLocale}\`.`)
     }
+
+    if (!localeCodes.has(options.fallbackLocale)) {
+        throw new Error(`[nuxt-i18n] \`fallbackLocale\` must match one of the configured locales. Received \`${options.fallbackLocale}\`.`)
+    }
 }

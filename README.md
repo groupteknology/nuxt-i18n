@@ -16,7 +16,8 @@ Lightweight i18n module for Nuxt with:
 - nested messages from local `.ts` files
 - `$t(path, params?)` interpolation with `{name}` and `{{name}}`
 - `$locale`, `$locales` and `$setLocale(code)`
-- fallback to `defaultLocale` when a key is missing in the active locale
+- fallback to `fallbackLocale` when a key is missing in the active locale
+- configurable locale cookie and optional missing-key warnings
 - generated types for locale codes and translation paths
 
 ## Quick Setup
@@ -33,12 +34,18 @@ Register it in `nuxt.config.ts`:
 export default defineNuxtConfig({
     modules: ['@groupteknology/nuxt-i18n'],
     i18n: {
+        cookie: {
+            name: 'locale',
+            sameSite: 'lax',
+        },
         defaultLocale: 'es',
         dir: 'i18n',
+        fallbackLocale: 'es',
         locales: [
             { code: 'es', file: 'es.ts', name: 'Espanol' },
             { code: 'en', file: 'en.ts', name: 'English' },
         ],
+        warnOnMissing: true,
     },
 })
 ```
@@ -59,7 +66,7 @@ export default {
 
 ```ts
 // i18n/locales/en.ts
-import type { LocaleInstance } from '@groupteknology/nuxt-i18n'
+import type { LocaleInput } from '@groupteknology/nuxt-i18n'
 
 export default {
     page: {
@@ -68,7 +75,7 @@ export default {
             welcome: 'Hello {{name}}',
         },
     },
-} satisfies LocaleInstance
+} satisfies LocaleInput
 ```
 
 Use it in components:
@@ -99,6 +106,7 @@ This module is intentionally small. It does include:
 - messages loaded from local TypeScript files
 - cookie-based locale persistence
 - typed keys based on the default locale
+- configurable fallback locale and missing-key warnings
 
 It does not include:
 

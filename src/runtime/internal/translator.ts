@@ -3,18 +3,25 @@ import type { RuntimeMessages, RuntimeOptions } from './types'
 import { interpolate } from '../helpers/interpolate'
 import { getMessageValue } from './messages'
 
-export function translate(
-    messages: RuntimeMessages,
-    options: RuntimeOptions,
-    locale: string,
-    path: string,
-    params?: Record<string, unknown>,
-) {
+export type TranslationResult = {
+    missing: boolean
+    value: string
+}
+
+export function translate(messages: RuntimeMessages, options: RuntimeOptions, locale: string, path: string, params?: Record<string, unknown>): TranslationResult {
     const currentValue = getMessageValue(messages[locale], path)
-    const fallbackValue = locale === options.defaultLocale ? currentValue : getMessageValue(messages[options.defaultLocale], path)
+    const fallbackValue = locale === options.fallbackLocale ? currentValue : getMessageValue(messages[options.fallbackLocale], path)
     const value = currentValue ?? fallbackValue
 
-    if (typeof value !== 'string') return path
+    if (typeof value !== 'string') {
+        return {
+            missing: true,
+            value: path,
+        }
+    }
 
-    return interpolate(value, params)
+    return {
+        missing: false,
+        value: interpolate(value, params),
+    }
 }

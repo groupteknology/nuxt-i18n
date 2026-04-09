@@ -16,6 +16,7 @@ export default {
     page: {
         home: {
             description: 'Esta es la página de inicio',
+            onlySpanish: 'Solo existe en español',
             title: 'Página de inicio',
         },
     },

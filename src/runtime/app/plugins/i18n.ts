@@ -13,7 +13,12 @@ export default defineNuxtPlugin(() => {
     const safeOpts = config.public.i18n as RuntimeOptions
     const safeMsgs = messages as RuntimeMessages
 
-    const storeLocale = useCookie<null | string>('nuxt-i18n-locale', { default: () => safeOpts.defaultLocale })
+    const storeLocale = useCookie<null | string>(safeOpts.cookie.name, {
+        default: () => safeOpts.defaultLocale,
+        maxAge: safeOpts.cookie.maxAge,
+        sameSite: safeOpts.cookie.sameSite,
+        secure: safeOpts.cookie.secure,
+    })
 
     const locale = computed({
         get: () => storeLocale.value || safeOpts.defaultLocale,
@@ -24,7 +29,13 @@ export default defineNuxtPlugin(() => {
     })
 
     function t(path: string, params?: Record<string, unknown>) {
-        return translate(safeMsgs, safeOpts, locale.value, path, params)
+        const result = translate(safeMsgs, safeOpts, locale.value, path, params)
+
+        if (result.missing && safeOpts.warnOnMissing) {
+            console.warn(`[nuxt-i18n] Missing translation for "${path}" in locale "${locale.value}" with fallback "${safeOpts.fallbackLocale}".`)
+        }
+
+        return result.value
     }
 
     function setLocale(code: string) {

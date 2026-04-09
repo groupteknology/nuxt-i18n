@@ -1,4 +1,4 @@
-import type { LocaleInstance } from '@groupteknology/nuxt-i18n'
+import type { LocaleInput } from '@groupteknology/nuxt-i18n'
 
 export default {
     page: {
@@ -7,4 +7,4 @@ export default {
             title: 'Home',
         },
     },
-} satisfies LocaleInstance
+} satisfies LocaleInput

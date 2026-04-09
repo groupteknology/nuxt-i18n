@@ -1,0 +1,10 @@
+{
+    "endOfLine": "auto",
+    "plugins": ["prettier-plugin-packagejson", "prettier-plugin-sort-json"],
+    "printWidth": 800,
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 4,
+    "trailingComma": "all",
+    "vueIndentScriptAndStyle": true
+}

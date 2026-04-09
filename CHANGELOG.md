@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.0.2
+
+### Features
+
+- configurable `fallbackLocale`
+- configurable locale cookie options
+- optional warnings for missing translations
+- improved fallback and missing-key coverage in tests and playground
+
 ## v0.0.1
 
 Initial public release of `@groupteknology/nuxt-i18n`.

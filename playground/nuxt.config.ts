@@ -6,8 +6,12 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
 
     i18n: {
+        cookie: {
+            name: 'playground-locale',
+        },
         defaultLocale: 'es',
         dir: 'i18n',
+        fallbackLocale: 'es',
         locales: [
             {
                 code: 'es',
@@ -20,6 +24,7 @@ export default defineNuxtConfig({
                 name: 'English',
             },
         ],
+        warnOnMissing: true,
     },
 
     modules: ['@groupteknology/nuxt-i18n'],

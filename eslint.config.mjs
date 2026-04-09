@@ -13,6 +13,9 @@ export default createConfigForNuxt({
     },
 })
     .append({
+        ignores: ['src/runtime/**/*.d.ts', 'src/runtime/**/*.js'],
+    })
+    .append({
         rules: {
             '@typescript-eslint/no-empty-object-type': 'off',
             '@typescript-eslint/no-unused-vars': 'warn',
