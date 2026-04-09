@@ -5,7 +5,7 @@ import perfectionist from 'eslint-plugin-perfectionist'
 // Run `npx @eslint/config-inspector` to inspect the resolved config interactively
 export default createConfigForNuxt({
     dirs: {
-        src: ['./playground', './src', './test'],
+        src: ['./playground', './src'],
     },
     features: {
         tooling: true,

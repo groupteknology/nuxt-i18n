@@ -147,10 +147,6 @@ It does not include:
   # Run ESLint
   npm run lint
   
-  # Run Vitest
-  npm run test
-  npm run test:watch
-  
   # Release new version
   npm run release
   ```

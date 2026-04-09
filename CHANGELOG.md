@@ -15,7 +15,7 @@
 - configurable `fallbackLocale`
 - configurable locale cookie options
 - optional warnings for missing translations
-- improved fallback and missing-key coverage in tests and playground
+- improved fallback and missing-key coverage in the playground
 
 ## v0.0.1
 
