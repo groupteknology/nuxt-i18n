@@ -8,7 +8,7 @@
         "generate": "nuxt generate"
     },
     "dependencies": {
-        "@groupteknology/nuxt-i18n": "latest",
-        "nuxt": "latest"
+        "@groupteknology/nuxt-i18n": "workspace:*",
+        "nuxt": "^4.4.2"
     }
 }

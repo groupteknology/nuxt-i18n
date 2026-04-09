@@ -1,42 +1,111 @@
-<!--
-Get your module up and running quickly.
-
-Find and replace all on all files (CMD+SHIFT+F):
-- Name: My Module
-- Package name: my-module
-- Description: My new Nuxt module
--->
-
-# My Module
+# @groupteknology/nuxt-i18n
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
-My new Nuxt module for doing amazing things.
+Lightweight i18n module for Nuxt with:
 
-- [✨ &nbsp;Release Notes](/CHANGELOG.md)
-<!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/my-module?file=playground%2Fapp.vue) -->
-<!-- - [📖 &nbsp;Documentation](https://example.com) -->
+- typed translation keys from your default locale
+- SSR-safe locale resolution with cookie persistence
+- simple `useI18n()` API without route strategies or SEO overhead
 
 ## Features
 
-<!-- Highlight some of the features your module provide here -->
-- ⛰ &nbsp;Foo
-- 🚠 &nbsp;Bar
-- 🌲 &nbsp;Baz
+- nested messages from local `.ts` files
+- `$t(path, params?)` interpolation with `{name}` and `{{name}}`
+- `$locale`, `$locales` and `$setLocale(code)`
+- fallback to `defaultLocale` when a key is missing in the active locale
+- generated types for locale codes and translation paths
 
 ## Quick Setup
 
-Install the module to your Nuxt application with one command:
+Install the module:
 
 ```bash
-npx nuxt module add my-module
+pnpm add @groupteknology/nuxt-i18n
 ```
 
-That's it! You can now use My Module in your Nuxt app ✨
+Register it in `nuxt.config.ts`:
 
+```ts
+export default defineNuxtConfig({
+    modules: ['@groupteknology/nuxt-i18n'],
+    i18n: {
+        defaultLocale: 'es',
+        dir: 'i18n',
+        locales: [
+            { code: 'es', file: 'es.ts', name: 'Espanol' },
+            { code: 'en', file: 'en.ts', name: 'English' },
+        ],
+    },
+})
+```
+
+Create locale files in `i18n/locales`:
+
+```ts
+// i18n/locales/es.ts
+export default {
+    page: {
+        home: {
+            title: 'Inicio',
+            welcome: 'Hola {{name}}',
+        },
+    },
+}
+```
+
+```ts
+// i18n/locales/en.ts
+import type { LocaleInstance } from '@groupteknology/nuxt-i18n'
+
+export default {
+    page: {
+        home: {
+            title: 'Home',
+            welcome: 'Hello {{name}}',
+        },
+    },
+} satisfies LocaleInstance
+```
+
+Use it in components:
+
+```vue
+<script setup lang="ts">
+    const { locale, locales, setLocale, t } = useI18n()
+</script>
+
+<template>
+    <div>
+        <h1>{{ t('page.home.title') }}</h1>
+        <p>{{ t('page.home.welcome', { name: 'Ada' }) }}</p>
+
+        <button v-for="item in locales" :key="item.code" @click="setLocale(item.code)">
+            {{ item.name }}
+        </button>
+
+        <pre>{{ locale }}</pre>
+    </div>
+</template>
+```
+
+## Scope
+
+This module is intentionally small. It does include:
+
+- messages loaded from local TypeScript files
+- cookie-based locale persistence
+- typed keys based on the default locale
+
+It does not include:
+
+- localized routing
+- browser language detection
+- SEO tags or `hreflang`
+- domain-based locale strategies
 
 ## Contribution
 
@@ -69,16 +138,13 @@ That's it! You can now use My Module in your Nuxt app ✨
 
 </details>
 
-
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/my-module/latest.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-version-href]: https://npmjs.com/package/my-module
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/my-module.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-downloads-href]: https://npm.chart.dev/my-module
-
-[license-src]: https://img.shields.io/npm/l/my-module.svg?style=flat&colorA=020420&colorB=00DC82
-[license-href]: https://npmjs.com/package/my-module
-
+[npm-version-src]: https://img.shields.io/npm/v/@groupteknology/nuxt-i18n/latest.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-version-href]: https://npmjs.com/package/@groupteknology/nuxt-i18n
+[npm-downloads-src]: https://img.shields.io/npm/dm/@groupteknology/nuxt-i18n.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-downloads-href]: https://npm.chart.dev/@groupteknology/nuxt-i18n
+[license-src]: https://img.shields.io/npm/l/@groupteknology/nuxt-i18n.svg?style=flat&colorA=020420&colorB=00DC82
+[license-href]: https://npmjs.com/package/@groupteknology/nuxt-i18n
 [nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt
 [nuxt-href]: https://nuxt.com

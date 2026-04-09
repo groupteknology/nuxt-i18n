@@ -1,15 +1,21 @@
-import { addImportsDir, addPlugin, addTemplate, addTypeTemplate, defineNuxtModule } from '@nuxt/kit'
+import { addImportsDir, addPlugin, addTemplate, addTypeTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 import type { NuxtI18nOptions } from './types'
 
-import { DEFAULT_OPTIONS } from './constants'
-import { createContext } from './context'
-import { generateMessages, generateTypes } from './genetate'
+import { createContext } from './core/context'
+import { generateMessages } from './generator/messages'
+import { generateTypes } from './generator/types'
 
-export type { NuxtI18nLocale, NuxtI18nMessages, NuxtI18nOptions } from './types'
+export type { NuxtI18nLocale, NuxtI18nOptions } from './types'
+
+const resolver = createResolver(import.meta.url)
 
 export default defineNuxtModule<NuxtI18nOptions>({
-    defaults: DEFAULT_OPTIONS,
+    defaults: {
+        defaultLocale: 'es',
+        dir: 'i18n',
+        locales: [],
+    },
     meta: {
         configKey: 'i18n',
         name: '@groupteknology/nuxt-i18n',
@@ -21,8 +27,8 @@ export default defineNuxtModule<NuxtI18nOptions>({
 
         addTypeTemplate({ filename: 'types/nuxt-i18n.d.ts', getContents: () => generateTypes(ctx), write: true })
 
-        addPlugin(ctx.resolver.resolve('./runtime/app/plugins/i18n'))
+        addPlugin(resolver.resolve('./runtime/app/plugins/i18n'))
 
-        addImportsDir(ctx.resolver.resolve('./runtime/app/composables'))
+        addImportsDir(resolver.resolve('./runtime/app/composables'))
     },
 })

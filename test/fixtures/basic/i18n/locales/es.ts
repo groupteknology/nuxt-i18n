@@ -1,8 +1,8 @@
 export default {
-  page: {
-    home: {
-      greeting: 'Hola {{name}}',
-      title: 'Inicio',
+    page: {
+        home: {
+            greeting: 'Hola {{name}}',
+            title: 'Inicio',
+        },
     },
-  },
 }

@@ -1,9 +1,0 @@
-{
-    "endOfLine": "auto",
-    "printWidth": 800,
-    "semi": false,
-    "singleQuote": true,
-    "tabWidth": 4,
-    "trailingComma": "all",
-    "vueIndentScriptAndStyle": true
-}
