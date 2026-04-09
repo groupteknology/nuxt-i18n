@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.0.6
+
+[compare changes](https://github.com/groupteknology/nuxt-i18n/compare/v0.0.5...v0.0.6)
+
+### 📖 Documentation
+
+- improve the README with clearer setup, API and maintainer references
+- add internal maintainer docs for architecture and development workflow
+- translate internal project docs in `docs/` to Spanish
+
+### 🏡 Chore
+
+- update the playground example translation params
+
+### ❤️ Contributors
+
+- Diego Otayza <xpedition.dev@outlook.com>
+
 ## v0.0.5
 
 [compare changes](https://github.com/groupteknology/nuxt-i18n/compare/v0.0.4...v0.0.5)

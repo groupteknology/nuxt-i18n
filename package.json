@@ -1,6 +1,6 @@
 {
     "name": "@groupteknology/nuxt-i18n",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Lightweight typed i18n module for Nuxt",
     "keywords": [
         "nuxt",
