@@ -229,8 +229,10 @@ Useful commands:
 
 For internal project context:
 
-- [docs/ARCHITECTURE.md](/Users/xpedition/Desktop/Projects/groupteknology/nuxt-i18n/docs/ARCHITECTURE.md)
-- [docs/DEVELOPMENT.md](/Users/xpedition/Desktop/Projects/groupteknology/nuxt-i18n/docs/DEVELOPMENT.md)
+- [`docs/ARCHITECTURE.md`](https://github.com/groupteknology/nuxt-i18n/blob/main/docs/ARCHITECTURE.md)
+- [`docs/DEVELOPMENT.md`](https://github.com/groupteknology/nuxt-i18n/blob/main/docs/DEVELOPMENT.md)
+
+These internal docs are currently written in Spanish.
 
 <!-- Badges -->
 

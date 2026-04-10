@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.0.7
+
+[compare changes](https://github.com/groupteknology/nuxt-i18n/compare/v0.0.6...v0.0.7)
+
+### 📖 Documentation
+
+- fix maintainer documentation links in the README for npm rendering
+- clarify that internal docs are currently written in Spanish
+
+### ❤️ Contributors
+
+- Diego Otayza <xpedition.dev@outlook.com>
+
 ## v0.0.6
 
 [compare changes](https://github.com/groupteknology/nuxt-i18n/compare/v0.0.5...v0.0.6)
